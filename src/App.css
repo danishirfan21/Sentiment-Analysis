@@ -42,7 +42,12 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
-  resize: vertical; /* Allow vertical resizing */
+  resize: none;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .sentiment-form button {
@@ -61,22 +66,18 @@
 }
 
 .sentiment-result {
-  text-align: center;
-  background-color: #fff;
+  color: white;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  border-radius: 10px;
+  text-align: center;
 }
 
-.sentiment-result h2 {
-  color: #4a90e2;
+.sentiment-result.positive {
+  background-color: green;
 }
 
-.sentiment-result p {
-  font-size: 1.2rem;
-  color: #333;
+.sentiment-result.negative {
+  background-color: red;
 }
 
 .error {

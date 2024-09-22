@@ -66,12 +66,6 @@ const SentimentForm = ({ onAnalyze, onLoading, onError, loading }) => {
         placeholder="Enter text"
         rows={4}
         disabled={loading}
-        style={{
-          width: '100%',
-          resize: 'none', 
-          maxHeight: '300px', 
-          overflowY: 'auto',
-        }}
       />
       <button type="submit" disabled={loading}>
         {loading ? 'Analyzing...' : 'Analyze Sentiment'}

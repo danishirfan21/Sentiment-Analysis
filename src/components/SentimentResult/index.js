@@ -5,17 +5,11 @@ const SentimentResult = ({ sentiment }) => {
   const sentimentLabel = sentiment.label;
   const sentimentScore = (sentiment.score * 100).toFixed(2);
 
-  const sentimentColor = sentimentLabel === 'POSITIVE' ? 'green' : 'red';
+  const sentimentColorClass =
+    sentimentLabel === 'POSITIVE' ? 'positive' : 'negative';
+
   return (
-    <div
-      style={{
-        backgroundColor: sentimentColor,
-        color: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        textAlign: 'center',
-      }}
-    >
+    <div className={`sentiment-result ${sentimentColorClass}`}>
       <h2>Sentiment: {sentimentLabel}</h2>
       <p>Confidence: {sentimentScore}%</p>
     </div>
