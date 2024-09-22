@@ -17,6 +17,7 @@ function App() {
 
   const handleLoading = () => {
     setLoading(true);
+    setError('');
   };
 
   const handleError = (message) => {
@@ -31,10 +32,13 @@ function App() {
         onAnalyze={handleSentimentAnalysis}
         onLoading={handleLoading}
         onError={handleError}
+        loading={loading}
       />
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
-      <SentimentResult sentiment={sentiment} />
+      {!loading && !error && sentiment && (
+        <SentimentResult sentiment={sentiment} />
+      )}
     </div>
   );
 }

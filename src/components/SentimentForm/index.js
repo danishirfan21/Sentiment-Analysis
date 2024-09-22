@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SentimentForm = ({ onAnalyze, onLoading, onError }) => {
+const SentimentForm = ({ onAnalyze, onLoading, onError, loading }) => {
   const [text, setText] = useState('');
 
   const model = 'distilbert/distilbert-base-uncased-finetuned-sst-2-english';
@@ -56,8 +56,11 @@ const SentimentForm = ({ onAnalyze, onLoading, onError }) => {
         placeholder="Enter text"
         rows="4"
         cols="50"
+        disabled={loading}
       />
-      <button type="submit">Analyze</button>
+      <button type="submit" disabled={loading}>
+        {loading ? 'Analyzing...' : 'Analyze Sentiment'}
+      </button>
     </form>
   );
 };
