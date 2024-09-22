@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const SentimentForm = ({ onAnalyze, onLoading, onError, loading }) => {
   const [text, setText] = useState('');
+  const textareaRef = useRef(null);
 
   const model = 'distilbert/distilbert-base-uncased-finetuned-sst-2-english';
   const authToken = process.env.REACT_APP_HF_TOKEN;
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+    }
+  }, [text]);
 
   async function query(data) {
     try {
@@ -51,12 +60,18 @@ const SentimentForm = ({ onAnalyze, onLoading, onError, loading }) => {
   return (
     <form className="sentiment-form" onSubmit={handleSubmit}>
       <textarea
+        ref={textareaRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Enter text"
-        rows="4"
-        cols="50"
+        rows={4}
         disabled={loading}
+        style={{
+          width: '100%',
+          resize: 'none', 
+          maxHeight: '300px', 
+          overflowY: 'auto',
+        }}
       />
       <button type="submit" disabled={loading}>
         {loading ? 'Analyzing...' : 'Analyze Sentiment'}
