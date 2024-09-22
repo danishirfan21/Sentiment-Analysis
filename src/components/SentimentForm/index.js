@@ -1,41 +1,51 @@
 import React, { useState } from 'react';
 
-const SentimentForm = ({ onAnalyze }) => {
+const SentimentForm = ({ onAnalyze, onLoading, onError }) => {
   const [text, setText] = useState('');
 
   const model = 'distilbert/distilbert-base-uncased-finetuned-sst-2-english';
   const authToken = process.env.REACT_APP_HF_TOKEN;
 
   async function query(data) {
-    const response = await fetch(
-      `https://api-inference.huggingface.co/models/${model}`,
-      {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify(data),
+    try {
+      const response = await fetch(
+        `https://api-inference.huggingface.co/models/${model}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) {
+        throw new Error('API request failed');
       }
-    );
-    const result = await response.json();
-    return result;
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!text) alert('Please enter some text');
+    if (!text) return onError('Please enter some text');
     if (!authToken)
-      alert('Please set the REACT_APP_HF_TOKEN environment variable');
-    query({ inputs: text }).then((response) => {
-      const sentiments = response[0];
+      return onError('Please set the REACT_APP_HF_TOKEN environment variable');
+    onLoading();
+    query({ inputs: text })
+      .then((response) => {
+        const sentiments = response[0];
 
-      const dominantSentiment = sentiments.reduce((prev, current) =>
-        prev.score > current.score ? prev : current
-      );
-      dominantSentiment.text = text;
-      onAnalyze(dominantSentiment);
-    });
+        const dominantSentiment = sentiments.reduce((prev, current) =>
+          prev.score > current.score ? prev : current
+        );
+        dominantSentiment.text = text;
+        onAnalyze(dominantSentiment);
+      })
+      .catch((err) => onError(err.message));
   };
 
   return (
